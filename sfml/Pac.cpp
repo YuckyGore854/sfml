@@ -23,6 +23,20 @@ int main() {
     int vx = 0;
     int vy = 0;
     int radius = 10;
+
+    sf::Sprite playerSprite;
+    sf::Texture pacMan;
+    pacMan.loadFromFile("pacman.png");
+    playerSprite.setTexture(pacMan, true);
+    playerSprite.setPosition(xpos, ypos);
+    int playerTicker = 0;
+    int playerRow = 0;
+    int playerColumn = 0;
+    sf::IntRect playerSubrect;
+    playerSubrect.width = 20;
+    playerSubrect.height = 20;
+    
+
     sf::CircleShape player(radius);
     player.setFillColor(sf::Color(250, 250, 0)); //using RGB value for color here (hex also works)
     player.setPosition(xpos, ypos); //top left "corner" of circle (not center!)
@@ -97,31 +111,26 @@ int main() {
         }//end event loop---------------------------------------------------------------
 
         //move Mr. Pac
-        if (keys[LEFT])
+        if (keys[LEFT]) {
             vx = -2;
+            playerRow = 1;
+        }
 
-        else if (keys[RIGHT] == true)
+        else if (keys[RIGHT] == true) {
             vx = 2;
+            playerRow = 0;
+        }
 
-        
-
-        if (keys[UP])
+        if (keys[UP]) {
             vy = -2;
+            playerRow = 2;
+        }
 
         else if (keys[DOWN]) {
             vy = 2;
+            playerRow = 3;
         }
-
-        
-
-    
-
-        
-        sf::RectangleShape playerRect(sf::Vector2f(xpos, ypos));
-        playerRect.setSize(sf::Vector2f(radius, radius));
-        playerRect.setFillColor(sf::Color::Color(100, 100, 100, 255));
-        playerRect.setPosition(xpos, ypos);
-        
+        playerSubrect.top = playerRow * 20;
         //right collision
         if (vx > 0 && 
             //top right corner
@@ -165,6 +174,7 @@ int main() {
         xpos += vx;
         ypos += vy;
         player.setPosition(xpos, ypos);
+        playerSprite.setPosition(xpos, ypos);
              //render section-----------------------------------------
         screen.clear(); //wipes screen, without this things smear
         for (int rows = 0; rows < 31; rows++) {
@@ -179,9 +189,20 @@ int main() {
                 }
             }
         }
-
-        screen.draw(playerRect);
-        screen.draw(player); //draw player
+        playerTicker++;
+        if (playerTicker == 5) {
+            std::cout << playerTicker << std::endl;
+            playerColumn++;
+            if (playerColumn > 2) {
+                playerColumn = 0;
+            }
+            playerSubrect.left = playerColumn * 20;
+            playerSprite.setTextureRect(playerSubrect);
+            playerTicker = 0;
+        }
+        
+        //screen.draw(player); //draw player
+        screen.draw(playerSprite);
         screen.display(); //flips memory drawings onto screen
     
 

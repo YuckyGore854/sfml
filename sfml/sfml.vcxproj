@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="oink.jpg" />
+    <Image Include="pacman.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HSL.hpp" />
